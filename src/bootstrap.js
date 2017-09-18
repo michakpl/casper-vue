@@ -28,6 +28,19 @@ export const router = new VueRouter({
   routes,
   linkExactActiveClass: 'active'
 })
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(m => m.meta.auth) && !store.state.auth.authenticated) {
+    next({
+      name: 'login.index'
+    })
+  } else if (to.matched.some(m => m.meta.guest) && store.state.auth.authenticated) {
+    next({
+      name: 'home.index'
+    })
+  } else {
+    next()
+  }
+})
 VuexRouterSync.sync(store, router)
 
 Vue.router = router

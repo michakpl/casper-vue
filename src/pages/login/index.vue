@@ -6,11 +6,11 @@
           <form @submit.prevent="login()">
             <div class="form-group">
               <label for="username">Username/Email</label>
-              <input name="username" id="username" placeholder="Enter email" class="form-control">
+              <input type="text" class="form-control" name="username" v-model="form.username">
             </div>
             <div class="form-group">
               <label for="password">Password</label>
-              <input type="password" name="password" id="password" placeholder="Enter password" class="form-control">
+              <input type="password" class="form-control" name="password" v-model="form.password">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
@@ -20,21 +20,22 @@
   </div>
 </template>
 <script>
-  import Form from '@/utils/Form'
-
   export default {
     data () {
       return {
-        form: new Form({
+        form: {
           username: null,
           password: null
-        })
+        }
       }
     },
 
     methods: {
       login: function () {
-        this.form.post('/')
+        this.$store.dispatch('auth/login', {
+          username: this.form.username,
+          password: this.form.password
+        })
       }
     }
   }

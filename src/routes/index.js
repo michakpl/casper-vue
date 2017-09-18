@@ -2,7 +2,11 @@ export default [
   {
     path: '/login',
     name: 'login.index',
-    component: resolve => require(['@/pages/login/index.vue'], resolve)
+    component: resolve => require(['@/pages/login/index.vue'], resolve),
+
+    meta: {
+      guest: true
+    }
   },
 
   {
@@ -14,7 +18,11 @@ export default [
   {
     path: '/',
     name: 'home.index',
-    component: resolve => require(['@/pages/home/index.vue'], resolve)
+    component: resolve => require(['@/pages/home/index.vue'], resolve),
+
+    meta: {
+      auth: true
+    }
   },
 
   {

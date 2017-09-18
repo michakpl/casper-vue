@@ -11,12 +11,12 @@
           <router-link :to="'/'" tag="li" class="nav-item">
             <a class="nav-link">Home</a>
           </router-link>
-          <router-link :to="'/login'" tag="li" class="nav-item">
+          <router-link :to="'/login'" tag="li" class="nav-item" v-if="!$store.state.auth.authenticated">
             <a class="nav-link">Login</a>
           </router-link>
-          <router-link :to="'/'" tag="li" class="nav-item">
-            <a class="nav-link">Home</a>
-          </router-link>
+          <li class="nav-item" v-if="$store.state.auth.authenticated">
+            <a href="#" @click.prevent="logout()" class="nav-link">Logout</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -34,7 +34,13 @@
 
     store,
 
-    router
+    router,
+
+    methods: {
+      logout () {
+        this.$store.dispatch('auth/logout')
+      }
+    }
   }
 </script>
 

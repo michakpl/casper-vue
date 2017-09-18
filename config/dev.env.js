@@ -5,5 +5,5 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   API_LOCATION: '"http://api.casper.dev"',
   API_CLIENT_ID: '"3"',
-  API_CLIENT_SECRET: '"YT1cP4iE3z762Hkre2sy2aLOos1m5FuWxJPl97e4"'
+  API_CLIENT_SECRET: '"RBsEsujI7bWfRAhYc1lPiJHMHQ4DREIKWzGdWn3M"'
 })
