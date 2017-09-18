@@ -5,7 +5,9 @@ Vue.config.debug = process.env.NODE_ENV !== 'production'
 import axios from 'axios'
 
 axios.defaults.baseURL = process.env.API_LOCATION
-axios.defaults.headers.common.accept = 'application/json'
+axios.defaults.headers.common = {
+  'X-Requested-With': 'XMLHttpRequest'
+}
 
 Vue.$http = axios
 Object.defineProperty(Vue.prototype, '$http', {

@@ -10,6 +10,16 @@ export default [
   },
 
   {
+    path: '/register',
+    name: 'register.index',
+    component: resolve => require(['@/pages/register/index.vue'], resolve),
+
+    meta: {
+      guest: true
+    }
+  },
+
+  {
     path: '/404',
     name: 'not-found.index',
     component: resolve => require(['@/pages/not-found/index.vue'], resolve)

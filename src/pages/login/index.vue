@@ -12,7 +12,7 @@
               <label for="password">Password</label>
               <input type="password" class="form-control" name="password" v-model="form.password">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Login</button>
           </form>
         </div>
       </div>
@@ -35,6 +35,8 @@
         this.$store.dispatch('auth/login', {
           username: this.form.username,
           password: this.form.password
+        }).then((response) => {
+          console.log(response)
         })
       }
     }
