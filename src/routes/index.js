@@ -26,13 +26,22 @@ export default [
   },
 
   {
+    path: '/map',
+    name: 'map.index',
+    component: resolve => require(['@/pages/map/index.vue'], resolve)
+  },
+
+  {
+    path: '/:page',
+    name: 'home.index-with-page',
+    component: resolve => require(['@/pages/home/index.vue'], resolve),
+    props: true
+  },
+
+  {
     path: '/',
     name: 'home.index',
-    component: resolve => require(['@/pages/home/index.vue'], resolve),
-
-    meta: {
-      auth: true
-    }
+    component: resolve => require(['@/pages/home/index.vue'], resolve)
   },
 
   {

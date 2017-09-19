@@ -11,6 +11,9 @@
           <router-link :to="'/'" tag="li" class="nav-item">
             <a class="nav-link">Home</a>
           </router-link>
+          <router-link :to="'/map'" tag="li" class="nav-item">
+            <a class="nav-link">Events Map</a>
+          </router-link>
           <router-link :to="'/login'" tag="li" class="nav-item" v-if="!$store.state.auth.authenticated">
             <a class="nav-link">Login</a>
           </router-link>

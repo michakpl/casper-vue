@@ -11,7 +11,7 @@ export const check = ({ commit }) => {
 export const login = ({ commit }, payload) => {
   proxy.login(payload)
     .then(({access_token}) => {
-      commit(types.LOGIN, payload.access_token)
+      commit(types.LOGIN, access_token)
 
       Vue.router.push({
         name: 'home.index'

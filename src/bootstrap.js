@@ -54,6 +54,10 @@ import '@/assets/scss/app.scss'
 
 Vue.use(BootstrapVue)
 
+import VueMoment from 'vue-moment'
+
+Vue.use(VueMoment)
+
 export default {
   router,
   axios

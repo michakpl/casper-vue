@@ -4,6 +4,7 @@ import createLogger from 'vuex/dist/logger'
 
 import auth from './modules/auth'
 import user from './modules/user'
+import event from './modules/event'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ const debug = process.env.NODE_ENV !== 'production'
 export default new Vuex.Store({
   modules: {
     auth,
-    user
+    user,
+    event
   },
 
   strict: debug,
