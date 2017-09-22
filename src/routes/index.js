@@ -32,6 +32,13 @@ export default [
   },
 
   {
+    path: '/event/:id',
+    name: 'event.show',
+    component: resolve => require(['@/pages/event/show.vue'], resolve),
+    props: true
+  },
+
+  {
     path: '/:page',
     name: 'home.index-with-page',
     component: resolve => require(['@/pages/home/index.vue'], resolve),

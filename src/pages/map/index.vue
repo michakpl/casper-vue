@@ -1,6 +1,15 @@
 <template>
   <div class="page page-map">
     <div class="container">
+      <form @submit.prevent="search()" class="row">
+          <div class="col-10">
+            <input type="text" class="form-control" name="location" v-model="location" placeholder="Your location">
+          </div>
+          <div class="col-2">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
+      </form>
+
       <div id="map" ref="mapContainer"></div>
     </div>
   </div>
@@ -9,19 +18,27 @@
   import 'ol/ol.css'
   import Map from 'ol/map'
   import View from 'ol/view'
+  import Projection from 'ol/proj'
   import Feature from 'ol/feature'
   import Icon from 'ol/style/icon'
   import Style from 'ol/style/style'
   import TileLayer from 'ol/layer/tile'
-  import OSMSource from 'ol/source/osm'
   import GeomPoint from 'ol/geom/point'
+  import StyleFill from 'ol/style/fill'
+  import GeomCircle from 'ol/geom/circle'
   import VectorLayer from 'ol/layer/vector'
+  import StyleCircle from 'ol/style/circle'
+  import StyleStroke from 'ol/style/stroke'
+  import BingSource from 'ol/source/bingmaps'
   import VectorSource from 'ol/source/vector'
 
   import EventProxy from '@/proxies/EventProxy'
+  import LocationProxy from '@/proxies/LocationProxy'
   import EventTransformer from '@/transformers/EventTransformer'
+  import CoordinateTransformer from '@/transformers/CoordinateTransformer'
 
   const eventProxy = new EventProxy()
+  const locationProxy = new LocationProxy()
 
   export default {
     name: 'map-index',
@@ -29,23 +46,27 @@
     data: function () {
       return {
         map: null,
-        events: []
+        events: [],
+        location: null
       }
     },
 
     computed: {
       view: function () {
         return new View({
-          projection: 'EPSG:3857',
-          center: [0, 0],
-          zoom: 4.5
+          center: Projection.fromLonLat([-70.40062, 44.07293]),
+          zoom: 4.5,
+          maxZoom: 19
         })
       },
 
       layers: function () {
         return [
           new TileLayer({
-            source: new OSMSource()
+            source: new BingSource({
+              key: process.env.BING_API_KEY,
+              imagerySet: 'AerialWithLabels'
+            })
           })
         ]
       },
@@ -65,8 +86,6 @@
 
     mounted: function () {
       this.initMap()
-
-      this.upcoming()
     },
 
     methods: {
@@ -82,7 +101,7 @@
       addMarker: function (location) {
         let eventMarker = new Feature({
           type: 'icon',
-          geometry: new GeomPoint(location)
+          geometry: new GeomPoint(Projection.fromLonLat(location))
         })
 
         let markerLayer = new VectorLayer({
@@ -105,17 +124,57 @@
       },
 
       addEventsToMap () {
-        for (let event in this.events) {
-          if (event.locationGeo) {
-            let coordinates = event.locationGeo.split(',')
+        for (let index in this.events) {
+          let event = this.events[index]
 
-            this.addMarker(coordinates)
+          if (event.locationGeo) {
+            this.addMarker(event.locationGeo)
           }
         }
-      }
-    },
+      },
 
-    watch: {
+      search () {
+        locationProxy.query(this.location)
+          .then((response) => {
+            this.locationCoordinate = CoordinateTransformer.fetch(response)
+
+            this.map.getView().setCenter(Projection.fromLonLat(this.locationCoordinate))
+            this.map.getView().setZoom(12)
+            this.showEventsRange()
+          })
+      },
+
+      showEventsRange (radius = 500) {
+        let resolution = this.map.getView().getResolution()
+        let projection = this.map.getView().getProjection()
+        let resolutionFactor = resolution / Projection.getPointResolution(projection, resolution, this.map.getView().getCenter())
+        let radiusInUnits = (radius / Projection.METERS_PER_UNIT.m) * resolutionFactor
+
+        let rangeCircle = new Feature({
+          type: 'icon',
+          geometry: new GeomPoint(Projection.fromLonLat(this.locationCoordinate))
+        })
+
+        let rangeLayer = new VectorLayer({
+          source: new VectorSource({
+            features: [rangeCircle]
+          }),
+          style: new Style({
+            image: new StyleCircle({
+              radius: radiusInUnits,
+              fill: new StyleFill({
+                color: 'rgba(255, 153, 0, 0.4)'
+              }),
+              stroke: new StyleStroke({
+                color: 'rgba(255, 204, 0, 1)',
+                width: 2
+              })
+            })
+          })
+        })
+
+        this.map.addLayer(rangeLayer)
+      }
     }
   }
 </script>
@@ -124,5 +183,9 @@
   #map {
     min-height: 300px;
     width: 100%;
+  }
+
+  form.row {
+    margin-bottom: 30px;
   }
 </style>

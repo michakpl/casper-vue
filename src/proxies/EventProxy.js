@@ -11,6 +11,10 @@ class EventProxy extends BaseProxy {
       params: PaginationTransformer.send(payload)
     })
   }
+
+  get (id) {
+    return this.submit('get', `${this.endpoint}/${id}`)
+  }
 }
 
 export default EventProxy

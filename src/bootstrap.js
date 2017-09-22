@@ -6,7 +6,8 @@ import axios from 'axios'
 
 axios.defaults.baseURL = process.env.API_LOCATION
 axios.defaults.headers.common = {
-  'X-Requested-With': 'XMLHttpRequest'
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
 }
 
 Vue.$http = axios

@@ -3,7 +3,7 @@
     <div class="container">
       <h2>Upcoming events</h2>
       <div class="list-group">
-        <a v-for="event in events" href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+        <router-link v-for="event in events" :key="event.id" :to="'/event/' + event.id" class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ event.title }}</h5>
             <small>{{ event.startsAt | moment('dddd, MMMM Do YYYY') }} (duration: {{ event.duration }})</small>
@@ -12,7 +12,7 @@
             {{ event.description }}
           </p>
           <small>{{ event.location }}</small>
-        </a>
+        </router-link>
       </div>
       <b-pagination-nav
         size="md"
