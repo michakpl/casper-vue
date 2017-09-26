@@ -20,6 +20,20 @@ class EventTransformer extends BaseTransformer {
       updatedAt: event.updated_at
     }
   }
+
+  static send (event) {
+    return {
+      title: event.title,
+      location: event.location,
+      location_geo: event.locationGeo ? event.locationGeo.join() : null,
+      description: event.description,
+      starts_at: event.startsAt,
+      duration: event.duration,
+      guests_limit: event.guestsLimit,
+      registration_ends_at: event.registrationEndsAt,
+      is_private: event.isPrivate
+    }
+  }
 }
 
 export default EventTransformer

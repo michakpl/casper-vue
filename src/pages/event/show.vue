@@ -1,5 +1,5 @@
 <template>
-  <div class="page page-home">
+  <div class="page page-event">
     <div class="container">
       <div class="row" v-if="event">
         <div class="col-12">
@@ -88,7 +88,7 @@
       view: function () {
         return new View({
           center: Projection.fromLonLat(this.event.locationGeo),
-          zoom: 4.5,
+          zoom: 16,
           maxZoom: 19
         })
       },

@@ -32,6 +32,16 @@ export default [
   },
 
   {
+    path: '/event/add',
+    name: 'event.add',
+    component: resolve => require(['@/pages/event/create.vue'], resolve),
+
+    meta: {
+      auth: true
+    }
+  },
+
+  {
     path: '/event/:id',
     name: 'event.show',
     component: resolve => require(['@/pages/event/show.vue'], resolve),

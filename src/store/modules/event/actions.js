@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import * as types from './mutation-types'
 import EventProxy from '@/proxies/EventProxy'
+import EventTransformer from '@/transformers/EventTransformer'
 import PaginationTransformer from '@/transformers/PaginationTransformer'
 
 const proxy = new EventProxy()
@@ -21,6 +22,18 @@ export const all = ({ commit }, fn = null) => {
     })
 }
 
+export const create = ({ commit }, event) => {
+  const transformedEvent = EventTransformer.send(event)
+
+  proxy.create(transformedEvent)
+    .then(() => {
+      Vue.router.push({
+        name: 'home.index'
+      })
+    })
+}
+
 export default {
-  all
+  all,
+  create
 }

@@ -2495,6 +2495,10 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
+flatpickr@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-3.0.7.tgz#2aa980c0bd83884c0299ee9fba3b7809bea16a29"
+
 flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
@@ -6193,6 +6197,12 @@ vm-browserify@0.0.4:
 void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
+
+vue-flatpickr-component@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-flatpickr-component/-/vue-flatpickr-component-3.1.0.tgz#87d2691df589d5da139b748bcb186f336dba94e1"
+  dependencies:
+    flatpickr "^3.0.7"
 
 vue-functional-data-merge@^1.0.6:
   version "1.0.6"

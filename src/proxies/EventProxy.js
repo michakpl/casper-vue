@@ -15,6 +15,10 @@ class EventProxy extends BaseProxy {
   get (id) {
     return this.submit('get', `${this.endpoint}/${id}`)
   }
+
+  create (item) {
+    return this.submit('post', `${this.endpoint}`, item)
+  }
 }
 
 export default EventProxy
