@@ -33,7 +33,15 @@ export const create = ({ commit }, event) => {
     })
 }
 
+export const join = ({ commit }, id) => {
+  proxy.join(id)
+    .then(() => {
+
+    })
+}
+
 export default {
   all,
-  create
+  create,
+  join
 }

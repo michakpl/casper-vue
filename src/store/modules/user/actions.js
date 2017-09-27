@@ -16,6 +16,13 @@ export const register = ({ commit }, payload) => {
     })
 }
 
+export const current = ({ commit }) => {
+  proxy.currentUser()
+    .then((response) => {
+      commit(types.CURRENT_USER, response)
+    })
+}
+
 export default {
   register
 }

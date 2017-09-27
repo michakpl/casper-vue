@@ -17,6 +17,10 @@ class UserProxy extends BaseProxy {
 
     return this.submit('post', `${this.endpoint}/register`, data)
   }
+
+  currentUser () {
+    return this.submit('get', `${this.endpoint}/user/current`)
+  }
 }
 
 export default UserProxy

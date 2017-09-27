@@ -52,11 +52,25 @@
           <div id="map" ref="mapContainer"></div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12" v-if="event">
+          <div>
+            <h2 class="d-inline">Participants</h2>
+            <a @click.prevent="join()" href="#" class="btn btn-sm btn-primary float-right" v-if="">Join</a>
+            <span class="clearfix"></span>
+          </div>
+          <ul v-if="event.guests.length">
+            <li v-for="guest in event.guests">{{ guest.username }}</li>
+          </ul>
+          <p v-else class="text-center">No participants yet</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import 'ol/ol.css'
+  import _ from 'lodash'
   import Map from 'ol/map'
   import View from 'ol/view'
   import Projection from 'ol/proj'
@@ -114,6 +128,12 @@
             src: 'http://openlayers.org/en/v3.19.1/examples/data/icon.png'
           }))
         })
+      },
+
+      isJoined: function () {
+        // let guestIndex = _.findIndex(this.event.guests, function (guest) {
+        //   return guest.id ===
+        // })
       }
     },
 
@@ -158,6 +178,10 @@
         })
 
         this.map.addLayer(markerLayer)
+      },
+
+      join: function () {
+        this.$store.dispatch('event/join', this.event.id)
       }
     }
   }
@@ -172,5 +196,9 @@
   #map {
     height: 400px;
     width: 100%;
+  }
+
+  .row {
+    margin-bottom: 15px;
   }
 </style>
