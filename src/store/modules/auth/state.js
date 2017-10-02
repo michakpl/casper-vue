@@ -1,3 +1,4 @@
 export default {
-  authenticated: false
+  authenticated: false,
+  currentUser: null
 }

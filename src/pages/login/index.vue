@@ -35,8 +35,6 @@
         this.$store.dispatch('auth/login', {
           username: this.form.username,
           password: this.form.password
-        }).then((response) => {
-          console.log(response)
         })
       }
     }

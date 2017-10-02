@@ -19,7 +19,11 @@ class UserProxy extends BaseProxy {
   }
 
   currentUser () {
-    return this.submit('get', `${this.endpoint}/user/current`)
+    return this.submit('get', `${this.endpoint}/current`)
+  }
+
+  list () {
+    return this.submit('get', `${this.endpoint}/lists`)
   }
 }
 

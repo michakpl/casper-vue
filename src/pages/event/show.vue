@@ -56,7 +56,18 @@
         <div class="col-12" v-if="event">
           <div>
             <h2 class="d-inline">Participants</h2>
-            <a @click.prevent="join()" href="#" class="btn btn-sm btn-primary float-right" v-if="">Join</a>
+            <a
+              href="#"
+              class="btn btn-sm btn-primary float-right"
+              @click.prevent="showInvitationForm()"
+              @if="isAuthor">
+            Invite</a>
+            <a
+              @click.prevent="join()"
+              href="#"
+              class="btn btn-sm btn-primary float-right"
+              v-if="$store.state.auth.authenticated === true && isJoined && !isAuthor">
+            Join</a>
             <span class="clearfix"></span>
           </div>
           <ul v-if="event.guests.length">
@@ -66,6 +77,9 @@
         </div>
       </div>
     </div>
+    <b-modal ref="invitationForm" title="Invitiation Form" :hide-footer="true" :no-enforce-focus="true">
+      <invitation-form :event="event"/>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -85,6 +99,7 @@
 
   import EventProxy from '@/proxies/EventProxy'
   import EventTransformer from '@/transformers/EventTransformer'
+  import InvitationForm from '@/components/event/InvitationForm'
 
   const eventProxy = new EventProxy()
 
@@ -131,9 +146,19 @@
       },
 
       isJoined: function () {
-        // let guestIndex = _.findIndex(this.event.guests, function (guest) {
-        //   return guest.id ===
-        // })
+        let guestIndex = _.findIndex(this.event.guests, (guest) => {
+          return guest.id === this.$store.state.auth.currentUser.id
+        })
+
+        if (guestIndex !== -1) {
+          return false
+        }
+
+        return true
+      },
+
+      isAuthor: function () {
+        return this.event.user.id === this.$store.state.auth.currentUser.id
       }
     },
 
@@ -156,12 +181,16 @@
       },
 
       initMap: function () {
-        this.map = new Map({
-          target: this.$refs.mapContainer,
-          loadTilesWhileAnimating: true,
-          view: this.view,
-          layers: this.layers
-        })
+        if (this.map) {
+          this.map.updateSize()
+        } else {
+          this.map = new Map({
+            target: this.$refs.mapContainer,
+            loadTilesWhileAnimating: true,
+            view: this.view,
+            layers: this.layers
+          })
+        }
       },
 
       addMarker: function (location) {
@@ -181,8 +210,19 @@
       },
 
       join: function () {
-        this.$store.dispatch('event/join', this.event.id)
+        eventProxy.join(this.event.id)
+          .then(() => {
+            this.getEvent(this.event.id)
+          })
+      },
+
+      showInvitationForm: function () {
+        this.$refs.invitationForm.show()
       }
+    },
+
+    components: {
+      InvitationForm
     }
   }
 </script>

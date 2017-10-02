@@ -90,12 +90,16 @@
 
     methods: {
       initMap: function () {
-        this.map = new Map({
-          target: this.$refs.mapContainer,
-          loadTilesWhileAnimating: true,
-          view: this.view,
-          layers: this.layers
-        })
+        if (this.map) {
+          this.map.updateSize()
+        } else {
+          this.map = new Map({
+            target: this.$refs.mapContainer,
+            loadTilesWhileAnimating: true,
+            view: this.view,
+            layers: this.layers
+          })
+        }
       },
 
       addMarker: function (location) {

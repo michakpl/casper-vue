@@ -23,6 +23,12 @@ class EventProxy extends BaseProxy {
   join (id) {
     return this.submit('post', `${this.endpoint}/${id}/join`)
   }
+
+  invite (id, userId) {
+    return this.submit('post', `${this.endpoint}/${id}/invite`, {
+      user_id: userId
+    })
+  }
 }
 
 export default EventProxy
