@@ -73,7 +73,15 @@
             <span class="clearfix"></span>
           </div>
           <ul v-if="event.guests.length">
-            <li v-for="guest in event.guests">{{ guest.username }}</li>
+            <li v-for="guest in event.guests">
+              {{ guest.username }}
+              <button
+                class="btn btn-sm btn-danger float-right"
+                @click="removeGuest(guest.id)"
+                v-if="canRemove(guest.id)">
+                Delete
+              </button>
+            </li>
           </ul>
           <p v-else class="text-center">No participants yet</p>
         </div>
@@ -230,6 +238,13 @@
           })
       },
 
+      removeGuest: function (userId) {
+        eventProxy.removeGuest(this.event.id, userId)
+          .then(() => {
+            this.getEvent(this.event.id)
+          })
+      },
+
       showInvitationForm: function () {
         this.$refs.invitationForm.show()
       },
@@ -256,6 +271,11 @@
             this.isAuthor
           ) &&
           (this.event.guestsLimit === 0 || this.event.guestsLimit > this.event.guests.length)
+      },
+
+      canRemove: function (guestId) {
+        return this.event.user.id === this.$store.state.auth.currentUser.id ||
+          guestId === this.$store.state.auth.currentUser.id
       }
     },
 
@@ -264,7 +284,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   table {
     td:first-child {
       font-weight: 700;
@@ -278,5 +298,13 @@
 
   .row {
     margin-bottom: 15px;
+  }
+
+  ul {
+    margin-top: 15px;
+
+    li {
+      margin-top: 10px;
+    }
   }
 </style>

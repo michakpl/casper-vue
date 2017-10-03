@@ -29,6 +29,10 @@ class EventProxy extends BaseProxy {
       user_id: userId
     })
   }
+
+  removeGuest (id, guestId) {
+    return this.submit('delete', `${this.endpoint}/${id}/guests/${guestId}`)
+  }
 }
 
 export default EventProxy
