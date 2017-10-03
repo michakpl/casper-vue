@@ -47,7 +47,7 @@
       invite: function () {
         eventProxy.invite(this.event.id, this.user.id)
           .then((response) => {
-            console.log(response)
+            this.$emit('user-invited')
           })
       }
     },

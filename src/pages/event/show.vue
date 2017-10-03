@@ -31,7 +31,7 @@
               </tr>
               <tr>
                 <td>Participant limit</td>
-                <td>{{ event.guestLimit ? event.guestLimit : 'no limit' }}</td>
+                <td>{{ event.guestsLimit ? event.guestsLimit : 'no limit' }}</td>
               </tr>
               <tr>
                 <td>Registration ends at:</td>
@@ -56,18 +56,20 @@
         <div class="col-12" v-if="event">
           <div>
             <h2 class="d-inline">Participants</h2>
-            <a
-              href="#"
-              class="btn btn-sm btn-primary float-right"
-              @click.prevent="showInvitationForm()"
-              @if="isAuthor">
-            Invite</a>
-            <a
-              @click.prevent="join()"
-              href="#"
-              class="btn btn-sm btn-primary float-right"
-              v-if="$store.state.auth.authenticated === true && isJoined && !isAuthor">
-            Join</a>
+            <div class="btn-group float-right">
+              <a
+                href="#"
+                class="btn btn-sm btn-primary"
+                @click.prevent="showInvitationForm()"
+                v-if="canInvite()">
+              Invite</a>
+              <a
+                @click.prevent="join()"
+                href="#"
+                class="btn btn-sm btn-primary"
+                v-if="canJoin()">
+              Join</a>
+            </div>
             <span class="clearfix"></span>
           </div>
           <ul v-if="event.guests.length">
@@ -78,7 +80,7 @@
       </div>
     </div>
     <b-modal ref="invitationForm" title="Invitiation Form" :hide-footer="true" :no-enforce-focus="true">
-      <invitation-form :event="event"/>
+      <invitation-form @user-invited="hideInvitationForm()" :event="event"/>
     </b-modal>
   </div>
 </template>
@@ -150,7 +152,19 @@
           return guest.id === this.$store.state.auth.currentUser.id
         })
 
-        if (guestIndex !== -1) {
+        if (guestIndex === -1) {
+          return false
+        }
+
+        return true
+      },
+
+      isInvited: function () {
+        let invitationIndex = _.findIndex(this.event.invitations, (invitation) => {
+          return invitation.id === this.$store.state.auth.currentUser.id
+        })
+
+        if (invitationIndex === -1) {
           return false
         }
 
@@ -218,6 +232,30 @@
 
       showInvitationForm: function () {
         this.$refs.invitationForm.show()
+      },
+
+      hideInvitationForm: function () {
+        this.$refs.invitationForm.hide()
+      },
+
+      canInvite: function () {
+        return this.$store.state.auth.authenticated === true &&
+          (
+            this.isAuthor ||
+            !this.event.isPrivate ||
+            (this.event.isPrivate && this.isJoined)
+          )
+      },
+
+      canJoin: function () {
+        return this.$store.state.auth.authenticated === true &&
+          !this.isJoined &&
+          (
+            this.event.isPrivate === false ||
+            (this.event.isPrivate === true && this.isInvited) ||
+            this.isAuthor
+          ) &&
+          (this.event.guestsLimit === 0 || this.event.guestsLimit > this.event.guests.length)
       }
     },
 

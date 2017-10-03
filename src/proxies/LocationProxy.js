@@ -1,4 +1,5 @@
-import jsonpFallback from 'jsonp-fallback'
+import qs from 'qs'
+import jsonp from 'jsonp'
 
 class LocationProxy {
   constructor () {
@@ -7,19 +8,21 @@ class LocationProxy {
 
   submit (url, data = null) {
     return new Promise((resolve, reject) => {
-      jsonpFallback(url, data, {
+      if (data) {
+        url += '?' + qs.stringify(data)
+      }
+
+      let params = {
         param: 'jsonp'
+      }
+
+      jsonp(url, params, (error, data) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(data)
+        }
       })
-        .then((response) => {
-          resolve(response)
-        })
-        .catch(({response}) => {
-          if (response) {
-            reject(response.error)
-          } else {
-            reject()
-          }
-        })
     })
   }
 
@@ -30,10 +33,6 @@ class LocationProxy {
     }
 
     return this.submit(`${this.endpoint}`, data)
-  }
-
-  callback (data) {
-
   }
 }
 

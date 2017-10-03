@@ -14,9 +14,10 @@ class EventTransformer extends BaseTransformer {
       duration: moment.duration(event.duration, 'hours').humanize(),
       guestsLimit: event.guests_limit,
       registrationEndsAt: event.registration_ends_at,
-      isPrivate: event.is_private,
+      isPrivate: !!event.is_private,
       user: event.user ? UserTransformer.fetch(event.user) : event.user_id,
       guests: event.guests ? UserTransformer.fetchCollection(event.guests) : [],
+      invitations: event.invitations ? UserTransformer.fetchCollection(event.invitations) : [],
       createdAt: event.created_at,
       updatedAt: event.updated_at
     }

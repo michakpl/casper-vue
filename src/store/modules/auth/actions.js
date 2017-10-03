@@ -28,7 +28,6 @@ export const login = ({ commit }, payload) => {
 
 export const logout = ({ commit }) => {
   commit(types.LOGOUT)
-  commit(types.CURRENT_USER, null)
 
   Vue.router.push({
     name: 'login.index'
