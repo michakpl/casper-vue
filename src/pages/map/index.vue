@@ -47,7 +47,10 @@
       return {
         map: null,
         events: [],
-        location: null
+        location: null,
+        eventsRange: null,
+        eventsCenter: null,
+        rangeLayer: null
       }
     },
 
@@ -118,26 +121,17 @@
         this.map.addLayer(markerLayer)
       },
 
-      upcoming () {
-        eventProxy.upcoming()
-          .then((response) => {
-            this.events = EventTransformer.fetchCollection(response)
-
-            this.addEventsToMap()
-          })
-      },
-
-      addEventsToMap () {
+      addEventsToMap: function () {
         for (let index in this.events) {
           let event = this.events[index]
 
-          if (event.locationGeo) {
+          if (event.locationGeo && this.isEventInRange(event)) {
             this.addMarker(event.locationGeo)
           }
         }
       },
 
-      search () {
+      search: function () {
         locationProxy.query(this.location)
           .then((response) => {
             this.locationCoordinate = CoordinateTransformer.fetch(response)
@@ -145,39 +139,56 @@
             this.map.getView().setCenter(Projection.fromLonLat(this.locationCoordinate))
             this.map.getView().setZoom(12)
             this.showEventsRange()
+
+            this.fetchEventsInRange()
           })
       },
 
-      showEventsRange (radius = 500) {
+      showEventsRange: function (radius = 5000) {
+        if (this.rangeLayer) {
+          this.map.removeLayer(this.rangeLayer)
+        }
+
         let resolution = this.map.getView().getResolution()
         let projection = this.map.getView().getProjection()
         let resolutionFactor = resolution / Projection.getPointResolution(projection, resolution, this.map.getView().getCenter())
         let radiusInUnits = (radius / Projection.METERS_PER_UNIT.m) * resolutionFactor
 
-        let rangeCircle = new Feature({
-          type: 'icon',
-          geometry: new GeomPoint(Projection.fromLonLat(this.locationCoordinate))
-        })
+        let source = new VectorSource({wrapX: false})
+        let rangeCircle = new GeomCircle(Projection.fromLonLat(this.locationCoordinate), radiusInUnits)
 
-        let rangeLayer = new VectorLayer({
+        this.rangeLayer = new VectorLayer({
           source: new VectorSource({
-            features: [rangeCircle]
-          }),
-          style: new Style({
-            image: new StyleCircle({
-              radius: radiusInUnits,
-              fill: new StyleFill({
-                color: 'rgba(255, 153, 0, 0.4)'
-              }),
-              stroke: new StyleStroke({
-                color: 'rgba(255, 204, 0, 1)',
-                width: 2
-              })
-            })
+            features: [new Feature(rangeCircle)]
           })
         })
 
-        this.map.addLayer(rangeLayer)
+        this.map.addLayer(this.rangeLayer)
+
+        this.eventsRange = Projection.transformExtent(rangeCircle.getExtent(), 'EPSG:3857', 'EPSG:4326')
+        this.eventsCenter = Projection.toLonLat(this.map.getView().getCenter())
+      },
+
+      fetchEventsInRange: function () {
+        eventProxy.upcoming({
+          locationGeo: [
+            `${this.eventsRange[0]},${this.eventsRange[1]}`,
+            `${this.eventsRange[2]},${this.eventsRange[3]}`
+          ]
+        })
+          .then((response) => {
+            this.events = EventTransformer.fetchCollection(response)
+
+            this.addEventsToMap()
+          })
+      },
+
+      isEventInRange: function (event) {
+        let mapRadius = this.eventsCenter[0] - this.eventsRange[0]
+
+        let eventRadius = Math.pow((event.locationGeo[0] - this.eventsCenter[0]), 2) + Math.pow((event.locationGeo[1] - this.eventsCenter[1]), 2)
+
+        return eventRadius <= mapRadius
       }
     }
   }

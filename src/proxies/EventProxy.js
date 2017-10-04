@@ -1,14 +1,14 @@
 import BaseProxy from './BaseProxy'
-import PaginationTransformer from '@/transformers/PaginationTransformer'
+import EventsSearchTransformer from '@/transformers/EventsSearchTransformer'
 
 class EventProxy extends BaseProxy {
   constructor () {
     super('events')
   }
 
-  upcoming (payload = []) {
+  upcoming (payload = null) {
     return this.submit('get', `${this.endpoint}/upcoming`, {
-      params: PaginationTransformer.send(payload)
+      params: EventsSearchTransformer.send(payload)
     })
   }
 
