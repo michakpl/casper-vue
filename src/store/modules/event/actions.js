@@ -23,14 +23,9 @@ export const all = ({ commit }, fn = null) => {
 }
 
 export const create = ({ commit }, event) => {
-  const transformedEvent = EventTransformer.send(event)
-
-  proxy.create(transformedEvent)
-    .then(() => {
-      Vue.router.push({
-        name: 'home.index'
-      })
-    })
+  Vue.router.push({
+    name: 'home.index'
+  })
 }
 
 export default {

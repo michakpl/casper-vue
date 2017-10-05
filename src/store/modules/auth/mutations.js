@@ -4,6 +4,7 @@ import {
   CHECK,
   LOGIN,
   LOGOUT,
+  ERROR,
   CURRENT_USER
 } from './mutation-types'
 
@@ -27,6 +28,15 @@ export default {
     localStorage.removeItem('access_token')
     localStorage.removeItem('current_user')
     Vue.$http.defaults.headers.common.Authorization = ''
+  },
+  [ERROR] (state, error) {
+    if (error.hint) {
+      state.error = error.hint
+    } else if (error.message) {
+      state.error = error.message
+    } else {
+      state.error = null
+    }
   },
   [CURRENT_USER] (state, currentUser) {
     localStorage.setItem('current_user', JSON.stringify(currentUser))

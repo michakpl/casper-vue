@@ -4,6 +4,9 @@
       <div class="row justify-content-center">
         <div class="col-6">
           <form @submit.prevent="login()">
+            <div class="alert alert-danger" role="alert" v-if="error">
+              {{ error }}
+            </div>
             <div class="form-group">
               <label for="username">Username/Email</label>
               <input type="text" class="form-control" name="username" v-model="form.username">
@@ -27,6 +30,12 @@
           username: null,
           password: null
         }
+      }
+    },
+
+    computed: {
+      error: function () {
+        return this.$store.state.auth.error
       }
     },
 

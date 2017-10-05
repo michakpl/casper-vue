@@ -1,3 +1,5 @@
+import ErrorTransformer from '@/transformers/ErrorTransformer'
+
 class Errors {
   /**
    * Create a new Errors instance.
@@ -39,7 +41,7 @@ class Errors {
    * @param {object} errors
    */
   record (errors) {
-    this.errors = errors
+    this.errors = ErrorTransformer.fetch(errors)
   }
 
   /**

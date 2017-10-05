@@ -24,6 +24,9 @@ export const login = ({ commit }, payload) => {
         name: 'home.index'
       })
     })
+    .catch((error) => {
+      commit(types.ERROR, error)
+    })
 }
 
 export const logout = ({ commit }) => {

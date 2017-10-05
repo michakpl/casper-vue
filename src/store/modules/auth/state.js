@@ -1,4 +1,5 @@
 export default {
   authenticated: false,
-  currentUser: null
+  currentUser: null,
+  error: null
 }
