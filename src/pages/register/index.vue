@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-6">
-          <form @submit.prevent="register()">
+          <form @submit.prevent="register()" @keydown="errors.clear($event.target.name)" @change="errors.clear($event.target.name)">
             <div class="form-group">
               <label for="username">Username</label>
               <input type="text" class="form-control" :class="{'is-invalid': errors.has('username')}" name="username" v-model="form.username">
@@ -40,7 +40,13 @@
             </div>
             <div class="form-group">
               <label for="birthdate">Birthdate</label>
-              <input type="birthdate" class="form-control" :class="{'is-invalid': errors.has('birthdate')}" name="birthdate" v-model="form.birthdate">
+              <flat-pickr v-model="form.birthdate"
+                          class="form-control"
+                          :class="{'is-invalid': errors.has('birthdate')}"
+                          name="birthdate"
+                          id="birthdate"
+                          placeholder="Click to select date">
+              </flat-pickr>
 
               <span class="invalid-feedback" v-if="errors.has('birthdate')" v-text="errors.get('birthdate')"></span>
             </div>
@@ -52,8 +58,10 @@
   </div>
 </template>
 <script>
+  import 'flatpickr/dist/flatpickr.css'
   import Errors from '@/utils/Errors'
   import UserProxy from '@/proxies/UserProxy'
+  import FlatPickr from 'vue-flatpickr-component'
   import UserTransformer from '@/transformers/UserTransformer'
 
   const proxy = new UserProxy()
@@ -83,6 +91,10 @@
             this.errors.record(errors)
           })
       }
+    },
+
+    components: {
+      FlatPickr
     }
   }
 </script>
