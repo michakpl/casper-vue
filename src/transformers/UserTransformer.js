@@ -12,6 +12,17 @@ class UserTransformer extends BaseTransformer {
       updated_at: user.updated_at
     }
   }
+
+  static send (user) {
+    return {
+      username: user.username,
+      email: user.email,
+      gender: user.male,
+      password: user.password,
+      password_confirmation: user.passwordConfirmation,
+      birthdate: user.birthdate
+    }
+  }
 }
 
 export default UserTransformer
