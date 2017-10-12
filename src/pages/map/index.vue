@@ -2,10 +2,10 @@
   <div class="page page-map">
     <div class="container">
       <form @submit.prevent="search()" class="row">
-          <div class="col-10">
+          <div class="col-md-10">
             <input type="text" class="form-control" name="location" v-model="location" placeholder="Your location">
           </div>
-          <div class="col-2">
+          <div class="col-md-2">
             <button type="submit" class="btn btn-primary">Search</button>
           </div>
       </form>

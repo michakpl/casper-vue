@@ -2,7 +2,7 @@
   <div class="page page-register">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-6">
+        <div class="col-md-6">
           <form @submit.prevent="register()" @keydown="errors.clear($event.target.name)" @change="errors.clear($event.target.name)">
             <div class="form-group">
               <label for="username">Username</label>

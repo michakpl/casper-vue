@@ -2,7 +2,7 @@
   <div class="page page-login">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-6">
+        <div class="col-md-6">
           <form @submit.prevent="login()">
             <div class="alert alert-danger" role="alert" v-if="error">
               {{ error }}

@@ -4,14 +4,15 @@
       <h2>Upcoming events</h2>
       <div class="list-group">
         <router-link v-for="event in events" :key="event.id" :to="'/event/' + event.id" class="list-group-item list-group-item-action flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ event.title }}</h5>
-            <small>{{ event.startsAt | moment('dddd, MMMM Do YYYY') }} (duration: {{ event.duration }})</small>
+          <div class="d-flex justify-content-between row">
+            <h5 class="mb-1 col-md-6">{{ event.title }}</h5>
+            <small class="col-md-6 text-right d-none d-lg-block">{{ event.startsAt | moment('dddd, MMMM Do YYYY') }} (duration: {{ event.duration }})</small>
           </div>
           <p class="mb-1">
             {{ event.description }}
           </p>
-          <small>{{ event.location }}</small>
+          <small>{{ event.location }}</small><br>
+          <small class="d-lg-none">{{ event.startsAt | moment('dddd, MMMM Do YYYY') }} (duration: {{ event.duration }})</small>
         </router-link>
       </div>
       <b-pagination-nav

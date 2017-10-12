@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6" v-if="event">
+        <div class="col-lg-6" v-if="event">
           <table class="table table-sm">
             <tbody>
               <tr>
@@ -48,7 +48,7 @@
             </tbody>
           </table>
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-6">
           <div id="map" ref="mapContainer"></div>
         </div>
       </div>
