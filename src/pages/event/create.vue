@@ -20,7 +20,7 @@
               <label for="location">Location</label>
               <input type="text" class="form-control" :class="{'is-invalid': errors.has('location')}" name="location" id="location" v-model="form.location">
 
-              <div id="map" ref="mapContainer" @click-map="setLocationGeo($event)"></div>
+              <div id="map" ref="mapContainer"></div>
 
               <span class="invalid-feedback" v-if="errors.has('location')" v-text="errors.get('location')"></span>
             </div>
@@ -174,10 +174,6 @@
 
     mounted: function () {
       this.initMap()
-
-      this.$on('click-map', (event) => {
-        this.setLocationGeo(event)
-      })
     },
 
     methods: {
@@ -206,7 +202,7 @@
         }
 
         this.map.on('click', (event) => {
-          this.$emit('click-map', event)
+          this.setLocationGeo(event)
         })
       },
 

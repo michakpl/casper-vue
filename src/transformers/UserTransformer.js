@@ -6,7 +6,7 @@ class UserTransformer extends BaseTransformer {
       id: user.id,
       username: user.username,
       email: user.email,
-      gender: user.male,
+      gender: user.gender,
       birthdate: user.birthdate,
       createdAt: user.created_at,
       updated_at: user.updated_at
@@ -17,7 +17,7 @@ class UserTransformer extends BaseTransformer {
     return {
       username: user.username,
       email: user.email,
-      gender: user.male,
+      gender: user.gender,
       password: user.password,
       password_confirmation: user.passwordConfirmation,
       birthdate: user.birthdate

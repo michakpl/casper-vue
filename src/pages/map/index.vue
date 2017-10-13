@@ -26,6 +26,7 @@
   import GeomPoint from 'ol/geom/point'
   import StyleFill from 'ol/style/fill'
   import GeomCircle from 'ol/geom/circle'
+  import Geolocation from 'ol/geolocation'
   import VectorLayer from 'ol/layer/vector'
   import StyleCircle from 'ol/style/circle'
   import StyleStroke from 'ol/style/stroke'
@@ -74,6 +75,12 @@
         ]
       },
 
+      geolocation: function () {
+        return new Geolocation({
+          projection: this.view.getProjection()
+        })
+      },
+
       markerStyle: function () {
         return new Style({
           image: new Icon(({
@@ -103,6 +110,14 @@
             layers: this.layers
           })
         }
+
+        this.geolocation.setTracking(true)
+
+        this.geolocation.on('change:position', (event) => {
+          let coordinates = this.geolocation.getPosition()
+
+          this.setUserLocation(coordinates)
+        })
       },
 
       addMarker: function (location) {
@@ -136,12 +151,16 @@
           .then((response) => {
             this.locationCoordinate = CoordinateTransformer.fetch(response)
 
-            this.map.getView().setCenter(Projection.fromLonLat(this.locationCoordinate))
-            this.map.getView().setZoom(12)
-            this.showEventsRange()
-
-            this.fetchEventsInRange()
+            this.setUserLocation(Projection.fromLonLat(this.locationCoordinate))
           })
+      },
+
+      setUserLocation: function (coordinates) {
+        this.map.getView().setCenter(coordinates)
+        this.map.getView().setZoom(12)
+        this.showEventsRange()
+
+        this.fetchEventsInRange()
       },
 
       showEventsRange: function (radius = 5000) {
