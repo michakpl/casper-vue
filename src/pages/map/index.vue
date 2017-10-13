@@ -51,7 +51,8 @@
         location: null,
         eventsRange: null,
         eventsCenter: null,
-        rangeLayer: null
+        rangeLayer: null,
+        eventMarkersLayer: []
       }
     },
 
@@ -114,9 +115,9 @@
         this.geolocation.setTracking(true)
 
         this.geolocation.on('change:position', (event) => {
-          let coordinates = this.geolocation.getPosition()
+          this.locationCoordinate = this.geolocation.getPosition()
 
-          this.setUserLocation(coordinates)
+          this.setUserLocation()
         })
       },
 
@@ -126,37 +127,49 @@
           geometry: new GeomPoint(Projection.fromLonLat(location))
         })
 
-        let markerLayer = new VectorLayer({
-          source: new VectorSource({
-            features: [eventMarker]
-          }),
-          style: this.markerStyle
-        })
-
-        this.map.addLayer(markerLayer)
+        return eventMarker
       },
 
       addEventsToMap: function () {
+        this.clearMapEvents()
+
+        let eventMarkers = []
+
         for (let index in this.events) {
           let event = this.events[index]
 
           if (event.locationGeo && this.isEventInRange(event)) {
-            this.addMarker(event.locationGeo)
+            eventMarkers.push(this.addMarker(event.locationGeo))
           }
         }
+
+        this.eventMarkersLayer = new VectorLayer({
+          source: new VectorSource({
+            features: eventMarkers
+          }),
+          style: this.markerStyle
+        })
+
+        this.map.addLayer(this.eventMarkersLayer)
+      },
+
+      clearMapEvents: function () {
+        this.map.removeLayer(this.eventMarkersLayer)
+
+        this.eventMarkersLayer = []
       },
 
       search: function () {
         locationProxy.query(this.location)
           .then((response) => {
-            this.locationCoordinate = CoordinateTransformer.fetch(response)
+            this.locationCoordinate = Projection.fromLonLat(CoordinateTransformer.fetch(response))
 
-            this.setUserLocation(Projection.fromLonLat(this.locationCoordinate))
+            this.setUserLocation()
           })
       },
 
-      setUserLocation: function (coordinates) {
-        this.map.getView().setCenter(coordinates)
+      setUserLocation: function () {
+        this.map.getView().setCenter(this.locationCoordinate)
         this.map.getView().setZoom(12)
         this.showEventsRange()
 
@@ -174,7 +187,7 @@
         let radiusInUnits = (radius / Projection.METERS_PER_UNIT.m) * resolutionFactor
 
         let source = new VectorSource({wrapX: false})
-        let rangeCircle = new GeomCircle(Projection.fromLonLat(this.locationCoordinate), radiusInUnits)
+        let rangeCircle = new GeomCircle(this.locationCoordinate, radiusInUnits)
 
         this.rangeLayer = new VectorLayer({
           source: new VectorSource({
