@@ -3,7 +3,7 @@ import jsonp from 'jsonp'
 
 class LocationProxy {
   constructor () {
-    this.endpoint = 'http://dev.virtualearth.net/REST/v1/Locations'
+    this.endpoint = '//dev.virtualearth.net/REST/v1/Locations'
   }
 
   submit (url, data = null) {
